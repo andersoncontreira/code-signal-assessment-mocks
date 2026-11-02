@@ -1,22 +1,3 @@
-//
-// ## Level 1: Basic operations
-//
-// Records are identified by a `key`. Each record holds multiple `field → value` pairs (all strings).
-//
-// - `set(key, field, value) -> None`: Sets `field` of the record `key` to `value`. If the record or field does not exist, create it. If it exists, overwrite it.
-// - `get(key, field) -> str | None`: Returns the value of `field` in the record `key`, or `None` if the record or field does not exist.
-// - `delete(key, field) -> bool`: Removes `field` from the record `key`. Returns `True` if the field existed and was removed, `False` otherwise.
-//
-//     ```
-// set("A", "B", "E")      -> None
-// set("A", "C", "F")      -> None
-// get("A", "B")           -> "E"
-// get("A", "D")           -> None
-// delete("A", "B")        -> True
-// delete("A", "B")        -> False
-// get("A", "B")           -> None
-// ```
-
 let _memory = {
     data: {},
     set(key, field, value) {
@@ -44,6 +25,24 @@ let _memory = {
         } else {
             return false
         }
+    },
+    scan (key, prefix) {
+        if (this.data[key]) {
+            let sorted = Object.keys(this.data[key]).sort()
+            let filtered = sorted.filter(field => {
+                return !(prefix && !field.startsWith(prefix));
+            })
+            return filtered.map(field =>
+            {
+                if (this.data[key][field]) {
+                    return `${field}(${this.data[key][field]})`
+                } else {
+                    return `${field}`
+                }
+            })
+        } else {
+            return []
+        }
     }
 }
 
@@ -59,6 +58,26 @@ let del = (key, field)  => {
 }
 
 
+//
+// ## Level 1: Basic operations
+//
+// Records are identified by a `key`. Each record holds multiple `field → value` pairs (all strings).
+//
+// - `set(key, field, value) -> None`: Sets `field` of the record `key` to `value`. If the record or field does not exist, create it. If it exists, overwrite it.
+// - `get(key, field) -> str | None`: Returns the value of `field` in the record `key`, or `None` if the record or field does not exist.
+// - `delete(key, field) -> bool`: Removes `field` from the record `key`. Returns `True` if the field existed and was removed, `False` otherwise.
+//
+//     ```
+// set("A", "B", "E")      -> None
+// set("A", "C", "F")      -> None
+// get("A", "B")           -> "E"
+// get("A", "D")           -> None
+// delete("A", "B")        -> True
+// delete("A", "B")        -> False
+// get("A", "B")           -> None
+// ```
+
+console.log('level 1')
 console.log(set("A", "B", "E") == null)
 console.log(set("A", "C", "F") == null)
 console.log(get("A", "B") == "E")
@@ -68,4 +87,46 @@ console.log(del("A", "B") == false)
 console.log(get("A", "B") == null)
 
 
-console.log(_memory);
+// console.log(_memory);
+console.log(''.padEnd(100, `-`))
+
+//
+// ## Level 2: Scanning
+//
+// - `scan(key) -> list[str]`: Returns all fields of record `key` as strings `"<field>(<value>)"`, sorted **lexicographically by field name**. Returns an empty list if the record does not exist or has no fields.
+// - `scan_by_prefix(key, prefix) -> list[str]`: Same as `scan`, but only includes fields whose name starts with `prefix`. Same ordering rules.
+//
+//     ```
+// set("A", "BC", "E")
+// set("A", "BD", "F")
+// set("A", "C", "G")
+// scan("A")                    -> ["BC(E)", "BD(F)", "C(G)"]
+// scan_by_prefix("A", "B")     -> ["BC(E)", "BD(F)"]
+// scan_by_prefix("A", "Z")     -> []
+// scan("X")                    -> []
+// ```
+
+let scan = (key) => {
+    return _memory.scan(key)
+}
+
+let scan_by_prefix = (key, prefix) => {
+    return _memory.scan(key, prefix)
+}
+
+console.log('level 2')
+console.log(set("A", "BC", "E") == null)
+console.log(set("A", "BD", "F") == null)
+console.log(set("A", "C", "G") == null)
+//console.log(scan("A"))
+//console.log(["BC(E)", "BD(F)", "C(G)"])
+// console.log(scan_by_prefix("A", "B"))
+console.log(JSON.stringify(scan("A")) === JSON.stringify(['BC(E)', 'BD(F)', 'C(G)']))
+console.log(JSON.stringify(scan_by_prefix("A", "B")) === JSON.stringify(['BC(E)', 'BD(F)']))
+console.log(JSON.stringify(scan_by_prefix("A", "Z")) === JSON.stringify([]))
+console.log(JSON.stringify(scan("X")) === JSON.stringify([]))
+//scan_by_prefix("A", "B")     -> ["BC(E)", "BD(F)"]
+// scan_by_prefix("A", "Z")     -> []
+// scan("X")                    -> []
+
+console.log(''.padEnd(100, `-`))
