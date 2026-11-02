@@ -2,6 +2,42 @@
 
 Start a 90-minute timer and implement an `InMemoryDB` class. Do not use external libraries. Each level extends the previous one, so do not rewrite code from earlier levels.
 
+> **Note on the examples:** every operation below is a **method of `InMemoryDB`**, and the tests call it on an instance (`db.set(...)`, `db.get_at(...)`). The examples are written without the `db.` prefix only to keep them short. Do not create standalone wrapper functions.
+>
+> Each scenario starts with a **fresh instance** (`db = new InMemoryDB()`), so state never leaks between scenarios.
+>
+> In JavaScript, a class or an object literal with method shorthand (`set(key, field, value) { ... }`) both work. Do not use arrow functions as object methods, because they lose `this`.
+
+## Starter skeleton
+
+```js
+// Option A: class
+class InMemoryDB {
+  constructor() { this.data = {} }
+  set(key, field, value) { /* ... */ }
+  get(key, field) { /* ... */ }
+  delete(key, field) { /* ... */ }
+}
+
+// Option B: object literal factory
+const makeDB = () => ({
+  data: {},
+  set(key, field, value) { /* ... */ },
+  get(key, field) { /* ... */ },
+  delete(key, field) { /* ... */ },
+})
+
+const db = new InMemoryDB()   // or makeDB()
+```
+
+## Design hint (read before coding Level 1)
+
+Decide how each field is stored **before** writing Level 1. Levels 3 and 4 need a value plus time metadata (for example `{ value, expiresAt }`, with `expiresAt = Infinity` when there is no TTL). If Level 1 stores raw strings, every later read has to handle two formats.
+
+## Testing tip
+
+Write a small `eq(actual, expected)` helper first and one scenario per level, each with a fresh instance.
+
 ## Level 1: Basic operations
 
 Records are identified by a `key`. Each record holds multiple `field → value` pairs (all strings).
@@ -45,6 +81,8 @@ Add timestamped versions of all previous operations. `timestamp` is an integer, 
 - `get_at(key, field, timestamp) -> str | None`
 - `scan_at(key, timestamp) -> list[str]`
 - `scan_by_prefix_at(key, prefix, timestamp) -> list[str]`
+
+Note on intervals: `[a, b)` includes `a` and excludes `b`. With `timestamp = 1` and `ttl = 10`, the field is alive at 1..10 and gone at 11. A field is alive when `ts >= timestamp && ts < timestamp + ttl`, so no `-1` adjustment is needed.
 
 Rules:
 
