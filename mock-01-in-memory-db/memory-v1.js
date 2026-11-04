@@ -268,3 +268,6 @@ console.log(JSON.stringify(scan_at("A", 8))              === JSON.stringify(["B(
 //console.log(`====>`, scan_at("A", 8))
 
 console.log('conclusao 1h45m')
+
+let x = 'a'
+let Y = ""
