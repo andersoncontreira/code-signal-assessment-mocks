@@ -255,3 +255,17 @@ assert.equal(queue.start_next(16)     ,"d")
 assert.equal(queue.start_next(17)     ,null)
 console.log('queue', queue)
 console.log('time 1h:18m')
+
+
+//Dica para os proximos
+
+// Um atalho que custa 10 segundos para escrever e evita a repetição:
+
+// js
+// const scenario = (name, fn) => { fn(new TaskQueue()); console.log('ok', name) }
+
+// scenario('level 1', q => {
+//   assert.equal(q.add_task(1, "t1", 5), true)
+// })
+
+// Na prova, se o editor já roda os testes por você, a regra se resume a nunca carregar estado de um cenário para outro dentro da classe, e a não deixar lógica provisória rodando. Descanse um pouco antes de começar e boa sorte.
