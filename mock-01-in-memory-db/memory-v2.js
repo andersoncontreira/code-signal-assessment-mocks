@@ -84,7 +84,7 @@ class InMemoryDB {
 
    _scan_values(record, prefix) {
         let values = Object.keys(record).filter(field => {
-            return (prefix) ? new String(field).includes(prefix): true
+            return (prefix) ? new String(field).startsWith(prefix): true
         }).map(field => {
             return `${field}(${record[field]})`
         })
