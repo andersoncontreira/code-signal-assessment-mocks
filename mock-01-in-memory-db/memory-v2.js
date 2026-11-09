@@ -68,6 +68,7 @@ class InMemoryDB {
    }
 
 //    `scan(key) -> list[str]`: Returns all fields of record `key` as strings `"<field>(<value>)"`, sorted **lexicographically by field name**. Returns an empty list if the record does not exist or has no fields.
+   // simplificar para chamar a scan_by_prefix
    scan(key) {
 
     this.tick()
