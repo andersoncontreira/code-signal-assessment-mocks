@@ -1,0 +1,18 @@
+{
+  "name": "mock-04-cloud-storage",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CodeSignal-style practice: Cloud Storage (4 levels)",
+  "scripts": {
+    "test": "jest",
+    "test:l1": "jest tests/level1",
+    "test:l2": "jest tests/level2",
+    "test:l3": "jest tests/level3",
+    "test:l4": "jest tests/level4",
+    "test:upto2": "jest tests/level1 tests/level2",
+    "test:upto3": "jest tests/level1 tests/level2 tests/level3"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
